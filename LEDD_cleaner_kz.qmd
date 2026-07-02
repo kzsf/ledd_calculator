@@ -1,0 +1,116 @@
+---
+title: "LEDD_script"
+author: "Kevin"
+format: html
+editor: visual
+---
+
+imports and data read-in
+
+```{r}
+library(tidyverse)
+
+#read in LEDD data
+ledd_df <- read.csv("Z1XADRCNACC_LEDD.csv")
+
+#read in subj list of interest
+subj_df <- read.csv("adrcIDs_forClinVar_pull.csv")
+```
+
+remove NA from "park_med_ptid", "park_med_admin_date", "total_ledd_calc"
+
+```{r}
+ledd_df <- ledd_df %>%
+  drop_na("park_med_ptid", "park_med_admin_date", "total_ledd_calc")
+
+```
+
+rename 'record_id', 'park_med_visitnum', "park_med_admin_date", "total_ledd_calc"
+
+```{r}
+ledd_df <- ledd_df %>%
+  rename(
+    Study_ID = record_id,
+    ADRC_LEDD_Visit = park_med_visitnum,
+    LEDD_date = park_med_admin_date,
+    LEDD_calc_tot = total_ledd_calc
+  )
+
+colnames(ledd_df)
+
+```
+
+convert LEDD_date to date in m/d/y
+
+```{r}
+ledd_df$LEDD_date <- as.Date(ledd_df$LEDD_date, format = "%m/%d/%y")
+head(ledd_df[5:10])
+
+```
+
+reoder IDs and visit dates by numerical + chronological order
+
+```{r}
+ledd_df <- ledd_df %>%
+  arrange(Study_ID, LEDD_date) %>%  
+  group_by(Study_ID) %>%
+  mutate(LEDD_time_point = row_number()) %>%  
+  ungroup()
+
+tail(ledd_df[5:10])
+
+```
+
+subset vars of interest
+
+```{r}
+
+ledd_df <- ledd_df %>%
+  select(Study_ID, ADRC_LEDD_Visit, LEDD_time_point, LEDD_date, LEDD_calc_tot)
+
+str(ledd_df)
+
+```
+
+remove PST-IDs that will later prohibit ID merging (str IDs vs int IDs) convert IDs and ADRC visit dates from floats to ints
+
+```{r}
+
+ledd_df <- ledd_df %>%
+  filter(!str_detect(Study_ID, "PST")) %>%
+  mutate(
+    Study_ID = as.integer(Study_ID),
+    ADRC_LEDD_Visit = as.integer(ADRC_LEDD_Visit)
+  )
+
+str(ledd_df)
+#write.csv(ledd_df, "ledd_df.csv", row.names = FALSE)
+
+```
+
+read in csv with subject list of interest and merge with ledd_df on Study_ID
+
+```{r}
+merged_ledd_subj <- left_join(subj_df, ledd_df, by = 'Study_ID')
+
+str(merged_ledd_subj)
+#write.csv(merged_ledd_subj, "merged_ledd_subj.csv", row.names = FALSE)
+
+```
+
+remove NA
+
+```{r}
+merged_ledd_subj <- merged_ledd_subj %>%
+  drop_na("ADRC_LEDD_Visit")
+str(merged_ledd_subj)
+
+
+```
+
+optional final export, ledd_df with only subj of interest (NA dropped)
+
+```{r}
+#write.csv(merged_ledd_subj, "merged_ledd_subj.csv", row.names = FALSE)
+
+```

@@ -1,0 +1,17 @@
+---
+title: "ledd_calculator_kz"
+format: html
+editor: visual
+---
+
+##### 1. export PD Medications Form Data from Z1XADRCNACC Database as a CSV file
+
+##### 2. save that CSV to your Desktop (or wherever), then copy + paste the name of the file below
+
+```{r}
+
+```
+
+```{r}
+
+```
