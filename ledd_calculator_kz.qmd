@@ -4,14 +4,24 @@ format: html
 editor: visual
 ---
 
-##### 1. export PD Medications Form Data from Z1XADRCNACC Database as a CSV file
+##### 1. Export the instrument "PD Medications - LED Calculation" from Z1XADRCNACC Database as a CSV file (raw labels)
 
 ##### 2. save that CSV to your Desktop (or wherever), then copy + paste the name of the file below
 
-```{r}
+### Imports and path read in
 
+Please edit the paths.yaml file with your desired input and output paths.
+
+```{r}
+library(tidyverse)
+library(yaml)
+
+#read in paths from your configuration file
+paths <- read_yaml("paths.yaml")
 ```
 
 ```{r}
-
+calculate_levodopa <- function(row){
+  row <- 
+}
 ```
