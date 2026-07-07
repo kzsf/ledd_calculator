@@ -1,12 +1,10 @@
-# LEDD Tools
-
-## ledd calculator instructions:
+# ledd calculator instructions:
 
 1.  Export the instrument `PD Medications - LED Calculation` from Z1XADRCNACC Database as a CSV file (raw labels).
 2.  Update paths.yaml file with your desired calculator input (location of your saved PD Medications export) and calculator output (calculated ledd data) file paths.
 3.  Run each code chunk. Output ledd csv will be saved under the path name specified in step 2.
 
-## ledd cleaner instructions:
+# ledd cleaner instructions:
 
 1.  Use ledd calculator and obtain output ledd data.
 2.  Update paths.yaml with your cleaner output file path.
